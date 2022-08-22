@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //  Timer
 
-    const deadline = '2022-08-22';
+    const deadline = '2022-08-23';
 
     function getTimeRemaining(endtime) {
         const t = Date.parse(endtime) - Date.parse(new Date()),
@@ -88,4 +88,47 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     setClock('.timer', deadline);
+
+    //  Modal
+
+    function openModal() {
+        modal.style.display = "block";
+        document.body.style.overflow = 'hidden';
+        clearInterval(modalTimerid);
+    }
+
+    function closeModal() {
+        modal.style.display = "none";
+        document.body.style.overflow = '';
+    }
+
+    const btns = document.querySelectorAll('[data-modal]'),
+        modal = document.querySelector('.modal'),
+        btnClose = document.querySelector("[data-close]");
+    btnClose.addEventListener('click', closeModal);
+    btns.forEach(item => {
+        item.addEventListener('click', openModal);
+    });
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.code === "Escape" && modal.style.display === "block") {
+            closeModal();
+        }
+    });
+
+    const modalTimerid = setTimeout(openModal, 5000);
+
+    function showModalByScroll() {
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            openModal();
+            window.removeEventListener('scroll', showModalByScroll);
+        }
+    }
+
+    window.addEventListener('scroll', showModalByScroll);
 });
